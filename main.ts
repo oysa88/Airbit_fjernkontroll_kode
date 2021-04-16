@@ -24,7 +24,7 @@ let Roll = 0
 let Pitch = 0
 let Arm = 0
 let Throttle = 0
-let radioGroup = 7
+let radioGroup = 1
 radio.setGroup(radioGroup)
 basic.showNumber(radioGroup)
 basic.forever(function () {
