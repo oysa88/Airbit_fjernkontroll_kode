@@ -1,5 +1,9 @@
 input.onButtonPressed(Button.A, function () {
-    Throttle += -5
+    if (Throttle < 40) {
+        Throttle += -5
+    } else {
+        Throttle += -1
+    }
 })
 input.onGesture(Gesture.ScreenDown, function () {
     Throttle = 0
@@ -18,15 +22,21 @@ input.onButtonPressed(Button.AB, function () {
     Throttle = 0
 })
 input.onButtonPressed(Button.B, function () {
-    Throttle += 5
+    if (Throttle < 40) {
+        Throttle += 5
+    } else {
+        Throttle += 1
+    }
 })
+let Yaw = 0
 let Roll = 0
 let Pitch = 0
 let Arm = 0
 let Throttle = 0
-let radioGroup = 1
-radio.setGroup(radioGroup)
-basic.showNumber(radioGroup)
+let Radiogruppe = 1
+radio.setGroup(Radiogruppe)
+basic.showNumber(Radiogruppe)
+pins.analogWritePin(AnalogPin.P1, 1023)
 basic.forever(function () {
     Pitch = input.rotation(Rotation.Pitch)
     Roll = input.rotation(Rotation.Roll)
@@ -34,10 +44,16 @@ basic.forever(function () {
     if (Arm == 1) {
         led.plot(0, 0)
     }
-    led.plot(0, Math.map(Throttle, 0, 100, 4, 0))
-    led.plot(Math.map(Roll, -45, 45, 0, 4), Math.map(Pitch, -45, 45, 0, 4))
+    if (pins.analogReadPin(AnalogPin.P0) > 500) {
+        Yaw = -30
+    } else if (pins.analogReadPin(AnalogPin.P2) > 500) {
+        Yaw = 30
+    } else {
+        Yaw = 0
+    }
     radio.sendValue("P", Pitch)
     radio.sendValue("A", Arm)
     radio.sendValue("R", Roll)
     radio.sendValue("T", Throttle)
+    radio.sendValue("Y", Yaw)
 })
